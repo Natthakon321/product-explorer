@@ -2,88 +2,115 @@
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { SORT_FIELDS, SearchQuerySchema, defaultQuery } from "@/lib/products";
-import type { SearchQuery } from "@/lib/products";
+
+import {
+  SearchQuerySchema,
+  SORT_FIELDS,
+  defaultQuery,
+} from "@/lib/products";
+
+import type {
+  SearchQuery,
+  SearchQueryInput,
+} from "@/lib/products";
 
 type ProductSearchFormProps = {
-  onSearch: (query: SearchQuery) => Promise<void>;
+  onSearch: (query: SearchQuery) => Promise<void> | void;
 };
 
-export default function ProductSearchForm({ onSearch }: ProductSearchFormProps) {
+export default function ProductSearchForm({
+  onSearch,
+}: ProductSearchFormProps) {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm<SearchQuery>({
+    formState: { isSubmitting },
+  } = useForm<SearchQueryInput, unknown, SearchQuery>({
     resolver: zodResolver(SearchQuerySchema),
-    mode: "onTouched",
     defaultValues: defaultQuery,
   });
 
+  async function onSubmit(query: SearchQuery) {
+    await onSearch(query);
+  }
+
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-4 mb-6">
-      <form onSubmit={handleSubmit(onSearch)} noValidate className="flex flex-wrap items-end gap-3">
-        {/* คำค้น */}
-        <div className="flex-1 min-w-[200px]">
-          <label htmlFor="q" className="block text-xs font-semibold text-slate-600 mb-1">
-            ค้นหาชื่อสินค้า
-          </label>
-          <input
-            id="q"
-            placeholder="พิมพ์ชื่อสินค้า เช่น phone, watch..."
-            {...register("q")}
-            className="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-300 rounded-lg text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
-          />
-        </div>
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4"
+    >
+      <div>
+        <label
+          htmlFor="search-query"
+          className="mb-1 block text-sm font-medium"
+        >
+          ค้นหาชื่อสินค้า
+        </label>
 
-        {/* จำนวนรายการ */}
-        <div className="w-28">
-          <label htmlFor="limit" className="block text-xs font-semibold text-slate-600 mb-1">
-            จำนวน (1-30)
-          </label>
-          <input
-            id="limit"
-            type="number"
-            {...register("limit", { valueAsNumber: true })}
-            aria-invalid={!!errors.limit}
-            aria-describedby="limit-error"
-            className="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-300 rounded-lg text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition text-center"
-          />
-        </div>
+        <input
+          id="search-query"
+          type="text"
+          placeholder="พิมพ์ชื่อสินค้า..."
+          {...register("q")}
+          className="w-full rounded-lg border px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
 
-        {/* เรียงตาม */}
-        <div className="w-36">
-          <label htmlFor="sortBy" className="block text-xs font-semibold text-slate-600 mb-1">
-            เรียงตาม
-          </label>
-          <select
-            id="sortBy"
-            {...register("sortBy")}
-            className="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-300 rounded-lg text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition cursor-pointer"
-          >
-            {SORT_FIELDS.map((field) => (
-              <option key={field} value={field}>
-                {field}
-              </option>
-            ))}
-          </select>
-        </div>
+      <div>
+        <label
+          htmlFor="search-limit"
+          className="mb-1 block text-sm font-medium"
+        >
+          จำนวนรายการ
+        </label>
 
-        {/* ปุ่ม Submit */}
+        <select
+          id="search-limit"
+          {...register("limit", { valueAsNumber: true })}
+          className="w-full rounded-lg border px-3 py-2"
+        >
+          {[5, 10, 15, 20, 30].map((limit) => (
+            <option key={limit} value={limit}>
+              {limit} รายการ
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div>
+        <label
+          htmlFor="search-sort"
+          className="mb-1 block text-sm font-medium"
+        >
+          เรียงตาม
+        </label>
+
+        <select
+          id="search-sort"
+          {...register("sortBy")}
+          className="w-full rounded-lg border px-3 py-2"
+        >
+          {SORT_FIELDS.map((field) => (
+            <option key={field} value={field}>
+              {field === "title"
+                ? "ชื่อสินค้า"
+                : field === "price"
+                  ? "ราคา"
+                  : "จำนวนสินค้า"}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div className="flex items-end">
         <button
           type="submit"
           disabled={isSubmitting}
-          className="px-5 py-2 text-sm font-medium text-white bg-slate-900 hover:bg-slate-800 active:bg-slate-950 rounded-lg disabled:opacity-50 transition shadow-sm"
+          className="w-full rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 disabled:opacity-50"
         >
-          {isSubmitting ? "กำลังค้นหา..." : "🔍 ค้นหา"}
+          {isSubmitting ? "กำลังค้นหา..." : "ค้นหาสินค้า"}
         </button>
-      </form>
-
-      {errors.limit && (
-        <p id="limit-error" role="alert" className="text-rose-500 text-xs mt-2 font-medium">
-          ⚠️ {errors.limit.message}
-        </p>
-      )}
-    </div>
+      </div>
+    </form>
   );
 }
