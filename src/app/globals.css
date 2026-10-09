@@ -1,9 +1,545 @@
 @import "tailwindcss";
 
+/* =========================================
+   PRODUCT EXPLORER — MODERN SAAS UI
+========================================= */
+
+:root {
+  --background: #f5f7ff;
+  --foreground: #172033;
+
+  --primary: #6366f1;
+  --primary-dark: #4f46e5;
+  --primary-light: #eef2ff;
+
+  --secondary: #0f172a;
+  --muted: #64748b;
+  --border: #e5eaf3;
+
+  --surface: #ffffff;
+  --success: #16a34a;
+  --danger: #ef4444;
+
+  --radius: 18px;
+  --shadow:
+    0 4px 24px rgba(15, 23, 42, 0.045);
+
+  --shadow-hover:
+    0 16px 40px rgba(15, 23, 42, 0.09);
+}
+
+/* RESET */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+html,
 body {
-  background-color: #f8fafc;
-  color: #0f172a;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
   margin: 0;
-  padding: 0;
+  min-height: 100%;
+}
+
+body {
+  background:
+    radial-gradient(
+      circle at 5% 0%,
+      rgba(99, 102, 241, 0.09),
+      transparent 28%
+    ),
+    var(--background);
+
+  color: var(--foreground);
+
+  font-family:
+    Inter,
+    "Segoe UI",
+    Tahoma,
+    Arial,
+    sans-serif;
+
+  font-size: 15px;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* =========================================
+   MAIN LAYOUT
+========================================= */
+
+main {
+  width: min(1200px, 100%);
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 42px 32px 64px;
+}
+
+/* =========================================
+   HEADER
+========================================= */
+
+header {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 24px;
+
+  padding: 28px 32px;
+  margin-bottom: 36px;
+
+  background: rgba(255, 255, 255, 0.88);
+
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  border-radius: 24px;
+
+  box-shadow: var(--shadow);
+
+  backdrop-filter: blur(16px);
+}
+
+header h1 {
+  margin: 0;
+
+  color: var(--secondary);
+
+  font-size: clamp(25px, 3vw, 34px);
+  font-weight: 800;
+  letter-spacing: -1.2px;
+  line-height: 1.3;
+}
+
+header p {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+/* =========================================
+   HEADINGS
+========================================= */
+
+h1,
+h2,
+h3 {
+  color: var(--secondary);
+  line-height: 1.35;
+}
+
+h1 {
+  font-weight: 800;
+}
+
+h2 {
+  margin: 0 0 14px;
+  font-size: 23px;
+  font-weight: 750;
+  letter-spacing: -0.5px;
+}
+
+h3 {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+/* =========================================
+   PRODUCT CARDS
+========================================= */
+
+article {
+  position: relative;
+
+  padding: 26px;
+  margin-bottom: 22px;
+
+  background: var(--surface);
+
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+
+  box-shadow: var(--shadow);
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
+}
+
+article:hover {
+  transform: translateY(-5px);
+
+  border-color: rgba(99, 102, 241, 0.3);
+
+  box-shadow: var(--shadow-hover);
+}
+
+article h2,
+article h3 {
+  margin-top: 0;
+  margin-bottom: 12px;
+}
+
+article p {
+  margin: 8px 0;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+
+article p:last-of-type {
+  color: var(--primary);
+  font-size: 23px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+/* =========================================
+   PRODUCT GRID
+   ใช้ได้เมื่อหน้ามี container ครอบการ์ด
+========================================= */
+
+.product-grid,
+.products-grid,
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  align-items: stretch;
+}
+
+/* =========================================
+   BUTTONS
+========================================= */
+
+button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  min-height: 42px;
+  padding: 10px 19px;
+
+  color: #ffffff;
+  background: linear-gradient(
+    135deg,
+    #6366f1,
+    #4f46e5
+  );
+
+  border: 1px solid transparent;
+  border-radius: 11px;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.18);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+button:hover {
+  transform: translateY(-2px);
+
+  background: linear-gradient(
+    135deg,
+    #5558ed,
+    #4338ca
+  );
+
+  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.25);
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 3px solid rgba(99, 102, 241, 0.35);
+  outline-offset: 3px;
+}
+
+/* =========================================
+   LINKS
+========================================= */
+
+a {
+  color: var(--primary);
+  font-weight: 650;
+
+  transition:
+    color 0.2s ease,
+    opacity 0.2s ease;
+}
+
+a:hover {
+  color: var(--primary-dark);
+}
+
+/* ปุ่มแก้ไขและลบสินค้า */
+
+article a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 38px;
+  padding: 8px 13px;
+  margin-top: 12px;
+  margin-right: 8px;
+
+  background: var(--primary-light);
+  border: 1px solid #e0e7ff;
+  border-radius: 9px;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+article a:hover {
+  background: #e0e7ff;
+  transform: translateY(-1px);
+}
+
+/* =========================================
+   FORMS
+========================================= */
+
+form {
+  width: 100%;
+}
+
+form label {
+  display: block;
+  margin-bottom: 7px;
+
+  color: #334155;
+
+  font-size: 14px;
+  font-weight: 700;
+}
+
+input,
+textarea,
+select {
+  width: 100%;
+  min-height: 46px;
+
+  padding: 11px 14px;
+
+  color: var(--foreground);
+  background: #ffffff;
+
+  border: 1px solid #dbe2ef;
+  border-radius: 11px;
+
+  outline: none;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+input:hover,
+textarea:hover,
+select:hover {
+  border-color: #a5b4fc;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--primary);
+
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #94a3b8;
+}
+
+textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+/* ช่องกรอกในฟอร์ม */
+
+form input,
+form textarea,
+form select {
+  margin-bottom: 18px;
+}
+
+/* =========================================
+   AUTH BUTTONS
+========================================= */
+
+header button {
+  white-space: nowrap;
+}
+
+header span {
+  color: #475569;
+  font-weight: 600;
+}
+
+/* =========================================
+   DIVIDERS
+========================================= */
+
+hr {
+  height: 1px;
+  margin: 26px 0;
+
+  background: var(--border);
+  border: 0;
+}
+
+/* =========================================
+   TEXT SELECTION
+========================================= */
+
+::selection {
+  color: #312e81;
+  background: #c7d2fe;
+}
+
+/* =========================================
+   SCROLLBAR
+========================================= */
+
+::-webkit-scrollbar {
+  width: 9px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border: 2px solid #f1f5f9;
+  border-radius: 20px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* =========================================
+   RESPONSIVE: TABLET
+========================================= */
+
+@media (max-width: 900px) {
+  main {
+    padding: 30px 22px 48px;
+  }
+
+  .product-grid,
+  .products-grid,
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+  }
+
+  header {
+    padding: 24px;
+  }
+}
+
+/* =========================================
+   RESPONSIVE: MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+  main {
+    padding: 20px 14px 36px;
+  }
+
+  header {
+    align-items: flex-start;
+    flex-direction: column;
+
+    padding: 22px 19px;
+    margin-bottom: 24px;
+
+    border-radius: 18px;
+  }
+
+  header h1 {
+    font-size: 27px;
+  }
+
+  h2 {
+    font-size: 21px;
+  }
+
+  article {
+    padding: 21px;
+    border-radius: 15px;
+  }
+
+  .product-grid,
+  .products-grid,
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  button {
+    min-height: 44px;
+  }
+
+  article a {
+    margin-right: 5px;
+  }
+}
+
+/* =========================================
+   REDUCED MOTION
+========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }
